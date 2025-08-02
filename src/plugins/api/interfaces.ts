@@ -794,6 +794,7 @@ export interface PlayerMedia {
   duration?: number; // optional
   queue_id?: string; // only present for requests from queue controller
   queue_item_id?: string; // only present for requests from queue controller
+  custom_data?: { [key: string]: any }; // optional custom data including video_url for MV support
 }
 
 export interface PlayerSource {

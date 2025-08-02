@@ -55,8 +55,21 @@
             v-if="$vuetify.display.height > 600"
             class="main-media-details-image"
           >
-            <v-img
+            <!-- Video player for NicoNico MV -->
+            <VideoPlayer
               v-if="
+                store.activePlayer?.powered != false &&
+                store.activePlayer?.current_media?.custom_data?.video_url
+              "
+              :player="store.activePlayer"
+              video-class="fullscreen-video-player"
+              :poster-url="store.activePlayer.current_media.image_url"
+              :priority="3"
+              style="max-width: 100%; width: auto; border-radius: 4px; height: 100%; object-fit: contain; margin: 0 auto; display: block;"
+            />
+            <!-- Regular image fallbacks -->
+            <v-img
+              v-else-if="
                 store.activePlayer?.powered != false &&
                 !store.curQueueItem?.image &&
                 store.activePlayer?.current_media?.image_url
@@ -407,7 +420,21 @@
           class="main-queue-items"
         >
           <div class="main-media-details-image main-media-details-image-alt">
+            <!-- Video player for NicoNico MV -->
+            <VideoPlayer
+              v-if="
+                store.activePlayer?.powered != false &&
+                store.activePlayer?.current_media?.custom_data?.video_url
+              "
+              :player="store.activePlayer"
+              video-class="fullscreen-video-player"
+              :poster-url="store.activePlayer.current_media.image_url"
+              :priority="3"
+              style="max-width: 100%; width: auto; border-radius: 4px; height: 100%; object-fit: contain; margin: 0 auto; display: block;"
+            />
+            <!-- Regular image fallback -->
             <MediaItemThumb
+              v-else
               :item="store.curQueueItem"
               :thumbnail="false"
               style="max-width: 100%; width: auto"
@@ -597,6 +624,7 @@ import { getPlayerMenuItems } from "@/helpers/player_menu_items";
 import { getSourceName } from "@/plugins/api/helpers";
 import { $t } from "@/plugins/i18n";
 import Color from "color";
+import VideoPlayer from "@/components/VideoPlayer.vue";
 
 const { name } = useDisplay();
 
@@ -1216,5 +1244,9 @@ button {
   height: 100%;
   width: 100%;
   overflow: hidden;
+}
+
+.fullscreen-video-player-small {
+  object-fit: contain;
 }
 </style>

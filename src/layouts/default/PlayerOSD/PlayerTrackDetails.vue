@@ -14,8 +14,22 @@
         }px; `"
         @click="store.showFullscreenPlayer = true"
       >
-        <MediaItemThumb
+        <!-- Video player for NicoNico MV -->
+        <VideoPlayer
           v-if="
+            store.activePlayer?.powered != false &&
+            store.activePlayer?.current_media?.custom_data?.video_url
+          "
+          :player="store.activePlayer"
+          :width="getBreakpointValue({ breakpoint: 'phone' }) ? 50 : 64"
+          :height="getBreakpointValue({ breakpoint: 'phone' }) ? 50 : 64"
+          video-class="media-thumb video-player"
+          :poster-url="store.activePlayer.current_media.image_url"
+          :priority="2"
+        />
+        <!-- Regular media thumbnails -->
+        <MediaItemThumb
+          v-else-if="
             store.activePlayer?.powered != false &&
             (store.curQueueItem?.media_item || store.curQueueItem?.image)
           "
@@ -234,6 +248,7 @@ import { computed } from "vue";
 import { MediaType, PlayerType } from "@/plugins/api/interfaces";
 import { store } from "@/plugins/store";
 import MediaItemThumb from "@/components/MediaItemThumb.vue";
+import VideoPlayer from "@/components/VideoPlayer.vue";
 import {
   ImageColorPalette,
   getArtistsString,
@@ -295,6 +310,28 @@ const streamDetails = computed(() => {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.3);
   display: inline-table;
+}
+
+.video-player {
+  object-fit: cover;
+  border-radius: 4px;
+  /* Hide video controls for cleaner appearance */
+}
+
+.video-player::-webkit-media-controls {
+  display: none !important;
+}
+
+.video-player::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+.video-player::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+.video-player::-webkit-media-controls-start-playback-button {
+  display: none !important;
 }
 
 /* this fixes missing subtitle items on webkit*/
